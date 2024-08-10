@@ -1,0 +1,12 @@
+@import "../../../shared/styles/mixins/pxToRem.scss";
+
+.header {
+  color: white;
+  align-self: flex-start;
+  font-weight: bold;
+  margin: 1.25rem 1rem;
+  @include pxToRem(font-size, 20);
+  .logo {
+    text-transform: uppercase;
+  }
+}

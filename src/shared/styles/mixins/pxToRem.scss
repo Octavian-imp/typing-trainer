@@ -1,0 +1,3 @@
+@mixin pxToRem($property, $sizeFromPx) {
+  #{$property}: calc($sizeFromPx / 16) + rem;
+}

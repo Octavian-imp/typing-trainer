@@ -1,0 +1,43 @@
+@use "../../../../shared/styles/vars.scss";
+@import "../../../../shared/styles/mixins/pxToRem.scss";
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    border: 1px solid vars.$border-color;
+    border-radius: 0.5rem;
+    background: vars.$bg-primary;
+    position: relative;
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: inherit;
+        background-color: rgba(#353535, 0.5);
+        transition-duration: vars.$global-dur-anim;
+    }
+    &:hover::after {
+        background-color: rgba(#353535, 0);
+    }
+    h1 {
+        font-weight: 500;
+        @include pxToRem(font-size, 20);
+        border-bottom: 1px solid vars.$border-color;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+    }
+    *:not(h1) {
+        margin: 0 1rem 1rem;
+        align-self: flex-start;
+        * {
+            margin: 0;
+        }
+    }
+}

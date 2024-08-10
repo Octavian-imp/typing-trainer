@@ -1,0 +1,33 @@
+.clickToStart {
+    $placeholder-dur-anim: 300ms;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(10px);
+    border-radius: 0.5rem;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    &_enter {
+        opacity: 1;
+    }
+    &_enterActive {
+        opacity: 1;
+        transition-duration: $placeholder-dur-anim;
+    }
+    &_enterDone {
+        opacity: 1;
+    }
+    &_exit,
+    &_exitDone {
+        opacity: 0;
+    }
+    &_exitActive {
+        opacity: 0;
+        transition-duration: $placeholder-dur-anim;
+    }
+}
