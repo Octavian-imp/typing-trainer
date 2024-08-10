@@ -1,6 +1,7 @@
 {
   "name": "training-typing",
   "version": "0.1.0",
+  "homepage": "https://Octavian-imp.github.io/typing-trainer",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
@@ -22,6 +23,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "predeploy":"npm run build",
+    "deploy":"gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
