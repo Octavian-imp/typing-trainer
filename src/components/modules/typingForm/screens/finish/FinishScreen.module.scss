@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
+    text-align: center;
     animation: transition-opacity 300ms ease forwards;
     @keyframes transition-opacity {
         0% {
