@@ -1,6 +1,7 @@
 import { useRef } from "react"
 import { CSSTransition } from "react-transition-group"
 import styles from "./StartScreen.module.scss"
+import getDeviceType from "../../../../../shared/fn/deviceType"
 type Props = {
     timerEnabled: boolean
     handleStartTimer: () => void
@@ -8,6 +9,8 @@ type Props = {
 
 const StartScreen = ({ timerEnabled, handleStartTimer }: Props) => {
     const placeholderRef = useRef<HTMLDivElement>(null)
+    const deviceType = getDeviceType()
+    console.log(deviceType)
 
     return (
         <CSSTransition
@@ -30,7 +33,8 @@ const StartScreen = ({ timerEnabled, handleStartTimer }: Props) => {
                 ref={placeholderRef}
                 onClick={handleStartTimer}
             >
-                Нажмите Enter или на этот блок, чтобы начать тренировку
+                Нажмите {deviceType !== "mobile" && "Enter/"}на этот блок, чтобы
+                начать тренировку
             </div>
         </CSSTransition>
     )
