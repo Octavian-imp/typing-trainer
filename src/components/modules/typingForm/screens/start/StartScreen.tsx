@@ -8,6 +8,7 @@ type Props = {
 
 const StartScreen = ({ timerEnabled, handleStartTimer }: Props) => {
     const placeholderRef = useRef<HTMLDivElement>(null)
+
     return (
         <CSSTransition
             nodeRef={placeholderRef}
