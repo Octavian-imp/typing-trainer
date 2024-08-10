@@ -1,1 +1,1 @@
-export const TIMER_VALUE=60
+export const TIMER_VALUE=5

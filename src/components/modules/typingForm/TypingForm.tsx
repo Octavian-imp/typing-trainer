@@ -1,11 +1,19 @@
 import cn from "clsx"
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
+import {
+    ChangeEvent,
+    KeyboardEvent,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react"
 import { useDispatch } from "react-redux"
 import { controlText, controlWordsForText } from "../../../constant/controlText"
 import { TIMER_VALUE } from "../../../constant/timerValue"
 import getIndexFirstDiffLetter, {
     getIndentText,
 } from "../../../shared/fn/strings"
+import { usePrev } from "../../../shared/hooks/usePrev"
 import useTimeout from "../../../shared/hooks/useTimeout"
 import { addResults } from "../../../store/reducers/wordsStat"
 import TypingControlText from "./controlText/TypingControlText"
@@ -14,6 +22,8 @@ import StartScreen from "./screens/start/StartScreen"
 import styles from "./TypingForm.module.scss"
 
 const TypingForm = () => {
+    const [spaceClicked, setSpaceClicked] = useState(false)
+
     const dispatch = useDispatch()
 
     // - поля для работы с таймером
@@ -23,12 +33,42 @@ const TypingForm = () => {
     // - поля для работы с текстом и полем ввода
     const inputRef = useRef<HTMLInputElement>(null)
     const [input, setInput] = useState<string>("")
+    const prevInput = usePrev(input)
     const indxActiveWord = useRef<number>(0)
     const [indxErrLetter, setIndxErrLetter] = useState<number>()
     const [indxErrWord, setIndxErrWord] = useState<number>()
     const [countErrWords, setCountErrWords] = useState<number>(0)
     const [controlWordsForTextState, setControlWordsForTextState] =
         useState(controlWordsForText)
+
+    useLayoutEffect(() => {
+        // - уменьшаем индекс активного слова если длина слова уменьшается и индекс больше 0 а также в слове не допущена ошибка
+        if (
+            input.length < prevInput.length &&
+            input.at(-1) !== " " &&
+            indxActiveWord.current > 0 &&
+            typeof indxErrWord === "undefined"
+        ) {
+            indxActiveWord.current--
+            return
+        }
+        if (input.at(-1) === " " && input.length - 1 > 0) {
+            setSpaceClicked(true)
+            // - предотвращаем ввод пробела если последний символ введенный ранее является пробелом
+            if (prevInput?.at(-1) === " ") {
+                setInput((prev) => prev.replace(/\s{1,}/g, " "))
+                return
+            }
+            // - если индекс ошибочного слова и индекс ошибочного символа не определен, то увеличиваем индекс активного слова
+            if (
+                typeof indxErrLetter === "undefined" &&
+                typeof indxErrWord === "undefined"
+            ) {
+                indxActiveWord.current++
+                return
+            }
+        }
+    }, [input])
 
     useEffect(() => {
         const lastControlLetter = controlText[input.length - 1]
@@ -93,7 +133,6 @@ const TypingForm = () => {
                 input.at(-1) === lastControlLetter &&
                 lastInputWord === lastControlWord.slice(0, lastInputWord.length)
             ) {
-                // console.log("последняя буква равна введенной");
                 setIndxErrLetter(undefined)
                 setIndxErrWord(undefined)
                 setControlWordsForTextState((prev) =>
@@ -108,7 +147,6 @@ const TypingForm = () => {
 
         // - Обнуляем индекс ошибки если поле ввода пустое
         if (input.length === 0) {
-            // console.log("введенный текст пустой");
             setControlWordsForTextState((prev) =>
                 prev.map((word, indx) =>
                     indx === indxActiveWord.current
@@ -145,6 +183,7 @@ const TypingForm = () => {
 
             setTimerEnabled(false)
             setCountErrWords(0)
+            setControlWordsForTextState(controlWordsForText)
             indxActiveWord.current = 0
             setInput("")
         },
@@ -161,7 +200,8 @@ const TypingForm = () => {
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value)
     }
-    function preventCursorAction(e: KeyboardEvent<HTMLInputElement>) {
+
+    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
         // - отменяем действия по умолчанию если нажаты стрелки смещения курсора
         if (
             e.key === "ArrowDown" ||
@@ -171,41 +211,6 @@ const TypingForm = () => {
             e.preventDefault()
             e.stopPropagation()
             return
-        }
-
-        const target = e.target as HTMLInputElement
-
-        // - проверяем что нажата клавиша backspace
-        if (e.key === "Backspace") {
-            // - если предпоследний символ не является пробелом и индекс активного слова больше нуля и индекс ошибочного слова не определен, то уменьшаем индекс активного слова
-            if (
-                target.value.at(-2) !== " " &&
-                indxActiveWord.current > 0 &&
-                typeof indxErrWord === "undefined"
-            ) {
-                // console.log("decrement active word");
-                indxActiveWord.current--
-                return
-            }
-        }
-        // - проверяем что нажата клавиша пробел
-        if (e.code === "Space") {
-            // - предотвращаем ввод пробела если последний символ введенный ранее является пробелом
-            if (target.value.at(-1) === " ") {
-                setInput((prev) => prev.replace(/\s{1,}/g, " "))
-                e.preventDefault()
-                e.stopPropagation()
-                return
-            }
-            // - если индекс ошибочного слова и индекс ошибочного символа не определен, то увеличиваем индекс активного слова
-            if (
-                typeof indxErrLetter === "undefined" &&
-                typeof indxErrWord === "undefined"
-            ) {
-                // console.log("increment active word");
-                indxActiveWord.current++
-                return
-            }
         }
     }
 
@@ -224,12 +229,13 @@ const TypingForm = () => {
                         ref={inputRef}
                         value={input}
                         onChange={handleChange}
-                        onKeyDown={preventCursorAction}
+                        onKeyDown={handleKeyDown}
                         disabled={!timerEnabled}
                         className={styles.input_text}
                     />
                 </div>
             </div>
+            {spaceClicked && "Пробел нажат"}
             <div className={styles.control_text_body}>
                 {/* проверяем если индекс активного слова равен длине массива контрольных слов, то выводим сообщение */}
                 {indxActiveWord.current === controlWordsForTextState.length && (

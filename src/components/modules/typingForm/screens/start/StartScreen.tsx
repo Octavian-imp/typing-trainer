@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { memo, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
 import styles from "./StartScreen.module.scss"
 import getDeviceType from "../../../../../shared/fn/deviceType"
@@ -7,10 +7,9 @@ type Props = {
     handleStartTimer: () => void
 }
 
-const StartScreen = ({ timerEnabled, handleStartTimer }: Props) => {
+const StartScreen = memo(({ timerEnabled, handleStartTimer }: Props) => {
     const placeholderRef = useRef<HTMLDivElement>(null)
     const deviceType = getDeviceType()
-    console.log(deviceType)
 
     return (
         <CSSTransition
@@ -38,6 +37,6 @@ const StartScreen = ({ timerEnabled, handleStartTimer }: Props) => {
             </div>
         </CSSTransition>
     )
-}
+})
 
 export default StartScreen
