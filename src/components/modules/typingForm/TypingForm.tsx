@@ -2,6 +2,7 @@ import cn from "clsx"
 import {
     ChangeEvent,
     KeyboardEvent,
+    useCallback,
     useEffect,
     useLayoutEffect,
     useRef,
@@ -22,8 +23,6 @@ import StartScreen from "./screens/start/StartScreen"
 import styles from "./TypingForm.module.scss"
 
 const TypingForm = () => {
-    const [spaceClicked, setSpaceClicked] = useState(false)
-
     const dispatch = useDispatch()
 
     // - поля для работы с таймером
@@ -53,7 +52,6 @@ const TypingForm = () => {
             return
         }
         if (input.at(-1) === " " && input.length - 1 > 0) {
-            setSpaceClicked(true)
             // - предотвращаем ввод пробела если последний символ введенный ранее является пробелом
             if (prevInput?.at(-1) === " ") {
                 setInput((prev) => prev.replace(/\s{1,}/g, " "))
@@ -191,11 +189,12 @@ const TypingForm = () => {
         timerEnabled
     )
 
-    function handleStartTimer() {
+    const handleStartTimer = useCallback(() => {
+        if (timerEnabled) return
         setTimerEnabled(true)
         inputRef.current?.removeAttribute("disabled")
         inputRef.current?.focus()
-    }
+    }, [])
 
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value)
@@ -235,7 +234,6 @@ const TypingForm = () => {
                     />
                 </div>
             </div>
-            {spaceClicked && "Пробел нажат"}
             <div className={styles.control_text_body}>
                 {/* проверяем если индекс активного слова равен длине массива контрольных слов, то выводим сообщение */}
                 {indxActiveWord.current === controlWordsForTextState.length && (

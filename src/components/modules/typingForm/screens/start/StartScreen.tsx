@@ -1,7 +1,7 @@
 import { memo, useRef } from "react"
 import { CSSTransition } from "react-transition-group"
-import styles from "./StartScreen.module.scss"
 import getDeviceType from "../../../../../shared/fn/deviceType"
+import styles from "./StartScreen.module.scss"
 type Props = {
     timerEnabled: boolean
     handleStartTimer: () => void
