@@ -1,4 +1,3 @@
-import cn from "clsx"
 import {
     ChangeEvent,
     KeyboardEvent,
@@ -17,6 +16,7 @@ import getIndexFirstDiffLetter, {
 import { usePrev } from "../../../shared/hooks/usePrev"
 import useTimeout from "../../../shared/hooks/useTimeout"
 import { addResults } from "../../../store/reducers/wordsStat"
+import UiInput from "../../ui/input/UiInput"
 import TypingControlText from "./controlText/TypingControlText"
 import FinishScreen from "./screens/finish/FinishScreen"
 import StartScreen from "./screens/start/StartScreen"
@@ -216,23 +216,13 @@ const TypingForm = () => {
     return (
         <div className={styles.body}>
             <div className={styles.header}>
-                <div
-                    className={cn(styles.input_body, {
-                        [styles.active]: timerEnabled,
-                    })}
-                >
-                    <input
-                        type="text"
-                        autoComplete={"off"}
-                        autoCorrect="off"
-                        ref={inputRef}
-                        value={input}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        disabled={!timerEnabled}
-                        className={styles.input_text}
-                    />
-                </div>
+                <UiInput
+                    ref={inputRef}
+                    disable={timerEnabled}
+                    value={input}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                />
             </div>
             <div className={styles.control_text_body}>
                 {/* проверяем если индекс активного слова равен длине массива контрольных слов, то выводим сообщение */}
