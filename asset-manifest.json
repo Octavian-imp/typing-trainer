@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/typing-trainer/static/css/main.66cade4a.css",
-    "main.js": "/typing-trainer/static/js/main.c9fdae9e.js",
+    "main.css": "/typing-trainer/static/css/main.7e52dd36.css",
+    "main.js": "/typing-trainer/static/js/main.cb99f8e2.js",
     "index.html": "/typing-trainer/index.html",
-    "main.66cade4a.css.map": "/typing-trainer/static/css/main.66cade4a.css.map",
-    "main.c9fdae9e.js.map": "/typing-trainer/static/js/main.c9fdae9e.js.map"
+    "main.7e52dd36.css.map": "/typing-trainer/static/css/main.7e52dd36.css.map",
+    "main.cb99f8e2.js.map": "/typing-trainer/static/js/main.cb99f8e2.js.map"
   },
   "entrypoints": [
-    "static/css/main.66cade4a.css",
-    "static/js/main.c9fdae9e.js"
+    "static/css/main.7e52dd36.css",
+    "static/js/main.cb99f8e2.js"
   ]
 }
